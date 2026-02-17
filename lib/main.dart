@@ -62,6 +62,7 @@ class PantallaOfertas extends StatelessWidget {
             precio: '\$250.00',
             categoria: 'Novela Romántica',
             colorBorde: Color(0xFFF1C40F),
+            imageUrl: 'https://picsum.photos/seed/deseo/200/300',
           ),
           const SizedBox(height: 40),
           const Divider(color: Colors.white10),
@@ -78,6 +79,7 @@ class PantallaOfertas extends StatelessWidget {
             precio: 'Desde \$100.00',
             categoria: 'Educación',
             colorBorde: Color(0xFF2ECC71),
+            imageUrl: 'https://picsum.photos/seed/gramatica/200/300',
           ),
           const SizedBox(height: 50),
           Center(
@@ -117,14 +119,15 @@ class _SeccionHeader extends StatelessWidget {
 }
 
 class _TarjetaLibro extends StatelessWidget {
-  final String titulo, precio, categoria;
+  final String titulo, precio, categoria, imageUrl;
   final Color colorBorde;
 
   const _TarjetaLibro(
       {required this.titulo,
       required this.precio,
       required this.categoria,
-      required this.colorBorde});
+      required this.colorBorde,
+      required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -138,15 +141,31 @@ class _TarjetaLibro extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Row(
           children: [
-            Container(
-              height: 90,
-              width: 60,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.white12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Image.network(
+                imageUrl,
+                height: 90,
+                width: 60,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    height: 90,
+                    width: 60,
+                    color: Colors.white.withOpacity(0.05),
+                    child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 90,
+                    width: 60,
+                    color: Colors.white.withOpacity(0.05),
+                    child: const Icon(Icons.book, color: Colors.white24, size: 30),
+                  );
+                },
               ),
-              child: const Icon(Icons.book, color: Colors.white24, size: 30),
             ),
             const SizedBox(width: 20),
             Expanded(
